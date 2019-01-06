@@ -14,11 +14,13 @@ document.addEventListener("click", getCssSelector, false);
 document.addEventListener("click", function(ev) {
   path = createXPathFromElement(ev.srcElement);
   console.log("xpath -> ", path);
-  saveOnDataBase(path, elementPos);
+    elementPos = elementPos + 1;
+    saveOnDataBase(path, elementPos);
 });
 
 function saveOnDataBase(path, elementPos) {
-  xhr.open("POST", 'http://localhost:3000/path/add', true);
+
+    xhr.open("POST", 'http://localhost:3000/path/add', true);
 
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   xhr.send(JSON.stringify({
@@ -26,7 +28,16 @@ function saveOnDataBase(path, elementPos) {
     session: uuid,
     elementPos: elementPos
   }));
+}
 
+function saveRelationshipOnDatabase(session, elementPos) {
+  console.log("relationship", session, elementPos)
+  xhr.open("POST", 'http://localhost:3000/relationship/add', true);
+
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.send(JSON.stringify({
+    session: uuid,
+  }));
 }
 
 function generateUuid() {

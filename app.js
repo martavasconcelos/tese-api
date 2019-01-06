@@ -32,16 +32,14 @@ app.get('/', function(req, res) {
 });
 
 app.post('/path/add', function(req, res) {
-  console.log("--------->", req.body.session)
+  console.log("---------> path: ", req.body.session)
   var name = req.body.path_name;
-  var session = req.body.session;
-  var elementPos = req.body.elementPos;
 
-  session
-    .run('CREATE(n:OBJECT {elementPath:{elementPathParam}, session:{sessionParam}, elementPos:{elementPosParam}}) RETURN n.path', {
+
+  session.run('CREATE(n:OBJECT {elementPath:{elementPathParam}, session:{sessionParam}, elementPos:{elementPosParam}}) RETURN n.path', {
       elementPathParam: name,
-      sessionParam: session,
-      elementPos: elementPos
+      sessionParam: req.body.session,
+      elementPosParam: req.body.elementPos
     })
     .then(function(result) {
       console.log("sucess!")
@@ -54,7 +52,27 @@ app.post('/path/add', function(req, res) {
       console.log("error!", err)
     })
 
-})
+});
+
+app.post('/relationship/add', function(req, res) {
+  console.log("---------> relationship: ", req.body.session)
+
+  session.run('MATCH (a:OBJECT),(b:OBJECT) WHERE a.session = {sessionParam} CREATE (a)-[r:RELTYPE]->(b) RETURN type(r)', {
+      sessionParam: req.body.session,
+      elementPosParam: req.body.elementPos
+    })
+    .then(function(result) {
+      console.log("sucess!")
+      res.redirect('/');
+
+      session.close();
+    })
+    .catch(function(err) {
+      console.log("error!")
+      console.log("error!", err)
+    })
+
+});
 
 
 
