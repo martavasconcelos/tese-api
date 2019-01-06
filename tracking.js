@@ -1,7 +1,6 @@
 var xhr = new XMLHttpRequest();
 var uuid;
 var elementPos;
-//xhr.onload =
 
 $(document).ready(function() {
   uuid = generateUuid()
@@ -9,19 +8,22 @@ $(document).ready(function() {
   console.log("ready!", uuid);
 });
 
-document.addEventListener("click", getCssSelector, false);
 
 document.addEventListener("click", function(ev) {
   path = createXPathFromElement(ev.srcElement);
   console.log("xpath -> ", path);
     elementPos = elementPos + 1;
-    saveOnDataBase(path, elementPos);
+    if(elementPos === 1){
+      saveNodeOnDataBase(path, elementPos);
+    }
+    else{
+      saveRelationshipOnDatabase(path, elementPos);
+    }
 });
 
-function saveOnDataBase(path, elementPos) {
+function saveNodeOnDataBase(path, elementPos) {
 
-    xhr.open("POST", 'http://localhost:3000/path/add', true);
-
+  xhr.open("POST", 'http://localhost:3000/path/add', true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   xhr.send(JSON.stringify({
     path_name: path,
@@ -31,12 +33,13 @@ function saveOnDataBase(path, elementPos) {
 }
 
 function saveRelationshipOnDatabase(session, elementPos) {
-  console.log("relationship", session, elementPos)
-  xhr.open("POST", 'http://localhost:3000/relationship/add', true);
 
+  xhr.open("POST", 'http://localhost:3000/relationship/add', true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   xhr.send(JSON.stringify({
-    session: uuid,
+      path_name: path,
+      session: uuid,
+      elementPos: elementPos
   }));
 }
 
@@ -51,7 +54,6 @@ function generateUuid() {
 }
 
 function getCssSelector(e) {
-
   var path = [];
   var pathString = '';
   var node = e.target;

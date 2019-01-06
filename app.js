@@ -55,11 +55,14 @@ app.post('/path/add', function(req, res) {
 });
 
 app.post('/relationship/add', function(req, res) {
-  console.log("---------> relationship: ", req.body.session)
+  console.log("---------> path: ", req.body.session)
+  var name = req.body.path_name;
 
-  session.run('MATCH (a:OBJECT),(b:OBJECT) WHERE a.session = {sessionParam} CREATE (a)-[r:RELTYPE]->(b) RETURN type(r)', {
+  session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {elementPath: {elementPathParam}, session: {sessionParam}, elementPos: {elementPosBParam}})-[:Follows]->(a) RETURN n', {
+      elementPathParam: name,
       sessionParam: req.body.session,
-      elementPosParam: req.body.elementPos
+      elementPosAParam: req.body.elementPos - 1,
+      elementPosBParam: req.body.elementPos
     })
     .then(function(result) {
       console.log("sucess!")
@@ -73,6 +76,7 @@ app.post('/relationship/add', function(req, res) {
     })
 
 });
+
 
 
 
