@@ -1,0 +1,20 @@
+{
+  "name": "graphdata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "*",
+    "ejs": "*",
+    "express": "*",
+    "morgan": "*",
+    "neo4j-driver": "*",
+    "path": "^0.12.7",
+    "uuid": "^3.3.2"
+  }
+}
