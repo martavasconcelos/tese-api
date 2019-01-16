@@ -31,16 +31,13 @@ app.get('/', function(req, res) {
     })
 });
 
-app.post('/path/add', function(req, res) {
-  console.log("---------> path: ", req.body.session)
-  var name = req.body.path_name;
-
-
-  session.run('CREATE(n:OBJECT {elementPath:{elementPathParam}, session:{sessionParam}, elementPos:{elementPosParam}}) RETURN n.path', {
-      elementPathParam: name,
+app.post('/node/add', function(req, res) {
+  session.run('CREATE(n:OBJECT {value:{valueParam}, session:{sessionParam}, elementPos:{elementPosParam}, action: {actionParam}}) RETURN n', {
+      valueParam: req.body.value,
       sessionParam: req.body.session,
-      elementPosParam: req.body.elementPos
-    })
+      elementPosParam: parseInt(req.body.elementPos),
+      actionParam: req.body.action
+  })
     .then(function(result) {
       console.log("sucess!")
       res.redirect('/');
@@ -55,14 +52,12 @@ app.post('/path/add', function(req, res) {
 });
 
 app.post('/relationship/add', function(req, res) {
-  console.log("---------> path: ", req.body.session)
-  var name = req.body.path_name;
-
-  session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {elementPath: {elementPathParam}, session: {sessionParam}, elementPos: {elementPosBParam}})-[:Follows]->(a) RETURN n', {
-      elementPathParam: name,
+  session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {value: {valueParam}, session: {sessionParam}, elementPos: {elementPosBParam}, action: {actionParam}})-[:Follows]->(a) RETURN n', {
+      valueParam: req.body.value,
       sessionParam: req.body.session,
-      elementPosAParam: req.body.elementPos - 1,
-      elementPosBParam: req.body.elementPos
+      elementPosAParam: parseInt(req.body.elementPos) - 1,
+      elementPosBParam: parseInt(req.body.elementPos),
+      actionParam: req.body.action
     })
     .then(function(result) {
       console.log("sucess!")
