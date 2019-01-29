@@ -1,10 +1,11 @@
 var xhr = new XMLHttpRequest();
 var uuid;
 var elementPos;
+var block = false;
 
 $(document).ready(function () {
     let data = sessionStorage.getItem('uuid');
-    console.log("data: ", data);
+    //console.log("data: ", data);
     if (data === null) {
         uuid = generateUuid();
         elementPos = -1;
@@ -18,12 +19,19 @@ $(document).ready(function () {
 
 
 document.addEventListener("click", function (ev) {
+    //console.log("type -> ", ev.srcElement.type);
+    if(ev.srcElement.type === "password"){
+        block = true;
+    }
+    else{
+        block = false;
+    }
     path = createXPathFromElement(ev.srcElement);
-    console.log("xpath -> ", path);
+    //console.log("xpath -> ", path);
 
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
     sessionStorage.setItem('elementPos', elementPos);
-    console.log("elementPos", elementPos);
+    //console.log("elementPos", elementPos);
     if (elementPos === 1) {
         saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), "click");
     }
@@ -33,16 +41,18 @@ document.addEventListener("click", function (ev) {
 });
 
 document.addEventListener("keyup", function (ev) {
-    console.log("xpath -> ", ev.key);
+    if(block === false) {
+    //console.log("key -> ", ev.key);
 
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-    sessionStorage.setItem('elementPos', elementPos);
+    //sessionStorage.setItem('elementPos', elementPos);
 
     if (elementPos === 1) {
         saveNodeOnDataBase(ev.key, sessionStorage.getItem('uuid'), elementPos, "input");
     }
     else {
         saveRelationshipOnDatabase(ev.key, sessionStorage.getItem('uuid'), elementPos, "input");
+    }
     }
 });
 

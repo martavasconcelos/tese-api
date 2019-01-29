@@ -40,7 +40,6 @@ app.post('/node/add', function(req, res) {
   })
     .then(function(result) {
       console.log("sucess!")
-      res.redirect('/');
 
       session.close();
     })
@@ -61,7 +60,6 @@ app.post('/relationship/add', function(req, res) {
     })
     .then(function(result) {
       console.log("sucess!")
-      res.redirect('/');
 
       session.close();
     })
