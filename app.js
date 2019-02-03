@@ -16,8 +16,13 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
-var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', '1234'));
+var driver = neo4j.driver('bolt://10.227.107.156', neo4j.auth.basic('neo4j', 'tese2018'));
 var session = driver.session();
 
 app.get('/', function(req, res) {
@@ -73,7 +78,7 @@ app.post('/relationship/add', function(req, res) {
 
 
 
-app.listen(3000);
+app.listen(3000, '10.227.107.156');
 console.log('Server Started on Port 3000');
 
 module.exports = app;

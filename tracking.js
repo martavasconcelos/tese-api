@@ -3,9 +3,8 @@ var uuid;
 var elementPos;
 var block = false;
 
-$(document).ready(function () {
-    let data = sessionStorage.getItem('uuid');
-    //console.log("data: ", data);
+document.addEventListener("DOMContentLoaded", function(event) {
+    var data = sessionStorage.getItem('uuid');
     if (data === null) {
         uuid = generateUuid();
         elementPos = -1;
@@ -27,11 +26,11 @@ document.addEventListener("click", function (ev) {
         block = false;
     }
     path = createXPathFromElement(ev.srcElement);
-    //console.log("xpath -> ", path);
+    console.log("xpath -> ", path);
 
-    let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
+    var elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
     sessionStorage.setItem('elementPos', elementPos);
-    //console.log("elementPos", elementPos);
+    console.log("elementPos", elementPos);
     if (elementPos === 1) {
         saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), "click");
     }
@@ -41,11 +40,11 @@ document.addEventListener("click", function (ev) {
 });
 
 document.addEventListener("keyup", function (ev) {
-    if(block === false) {
-    //console.log("key -> ", ev.key);
+    if(!block) {
+    console.log("key -> ", ev.key);
 
-    let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-    //sessionStorage.setItem('elementPos', elementPos);
+    var elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
+    sessionStorage.setItem('elementPos', elementPos);
 
     if (elementPos === 1) {
         saveNodeOnDataBase(ev.key, sessionStorage.getItem('uuid'), elementPos, "input");
@@ -57,7 +56,7 @@ document.addEventListener("keyup", function (ev) {
 });
 
 function saveNodeOnDataBase(value, session, elementPos, action) {
-    xhr.open("POST", 'http://localhost:3000/node/add', true);
+    xhr.open("POST", 'http://10.227.107.156:3000/node/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
         value: value,
@@ -68,7 +67,7 @@ function saveNodeOnDataBase(value, session, elementPos, action) {
 }
 
 function saveRelationshipOnDatabase(value, session, elementPos, action) {
-    xhr.open("POST", 'http://localhost:3000/relationship/add', true);
+    xhr.open("POST", 'http://10.227.107.156:3000/relationship/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
         value: value,
