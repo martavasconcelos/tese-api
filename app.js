@@ -1,10 +1,10 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-var neo4j = require('neo4j-driver').v1;
+let express = require('express');
+let path = require('path');
+let logger = require('morgan');
+let bodyParser = require('body-parser');
+let neo4j = require('neo4j-driver').v1;
 
-var app = express();
+let app = express();
 
 //View engine
 app.set('views', path.join(__dirname, 'views'));
@@ -37,11 +37,13 @@ app.get('/', function(req, res) {
 });
 
 app.post('/node/add', function(req, res) {
-  session.run('CREATE(n:OBJECT {value:{valueParam}, session:{sessionParam}, elementPos:{elementPosParam}, action: {actionParam}}) RETURN n', {
-      valueParam: req.body.value,
+    console.log(req.body);
+    session.run('CREATE(n:OBJECT {path:{pathParam}, session:{sessionParam}, elementPos:{elementPosParam}, action: {actionParam}, value:{valueParam}}) RETURN n', {
+      pathParam: req.body.path,
       sessionParam: req.body.session,
       elementPosParam: parseInt(req.body.elementPos),
-      actionParam: req.body.action
+      actionParam: req.body.action,
+      valueParam: req.body.value
   })
     .then(function(result) {
       console.log("sucess!")
@@ -56,13 +58,15 @@ app.post('/node/add', function(req, res) {
 });
 
 app.post('/relationship/add', function(req, res) {
-  session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {value: {valueParam}, session: {sessionParam}, elementPos: {elementPosBParam}, action: {actionParam}})-[:Follows]->(a) RETURN n', {
-      valueParam: req.body.value,
+    console.log(req.body);
+  session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {path: {pathParam}, session: {sessionParam}, elementPos: {elementPosBParam}, action: {actionParam},value: {valueParam}})-[:Follows]->(a) RETURN n', {
+      pathParam: req.body.path,
       sessionParam: req.body.session,
       elementPosAParam: parseInt(req.body.elementPos) - 1,
       elementPosBParam: parseInt(req.body.elementPos),
-      actionParam: req.body.action
-    })
+      actionParam: req.body.action,
+      valueParam: req.body.value
+  })
     .then(function(result) {
       console.log("sucess!")
 

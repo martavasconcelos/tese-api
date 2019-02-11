@@ -1,7 +1,8 @@
-var xhr = new XMLHttpRequest();
-var uuid;
-var elementPos;
-var block = false;
+let xhr = new XMLHttpRequest();
+let uuid;
+let elementPos;
+let block = false;
+let path;
 
 document.addEventListener("DOMContentLoaded", function(event) {
     var data = sessionStorage.getItem('uuid');
@@ -18,7 +19,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 document.addEventListener("click", function (ev) {
-    //console.log("type -> ", ev.srcElement.type);
+   getMouseElement(ev);
+});
+
+document.addEventListener("dragend", function (ev) {
+    getMouseElement(ev);
+});
+
+document.addEventListener("keypress", function (ev) {
+    getKeyboardElement(ev);
+});
+
+function getMouseElement(ev) {
+
     if(ev.srcElement.type === "password"){
         block = true;
     }
@@ -32,48 +45,53 @@ document.addEventListener("click", function (ev) {
     sessionStorage.setItem('elementPos', elementPos);
     console.log("elementPos", elementPos);
     if (elementPos === 1) {
-        saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), "click");
+        saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type);
     }
     else {
-        saveRelationshipOnDatabase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), "click");
+        saveRelationshipOnDatabase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type);
     }
-});
 
-document.addEventListener("keyup", function (ev) {
+}
+
+function getKeyboardElement(ev) {
     if(!block) {
-    console.log("key -> ", ev.key);
+        console.log("key -> ", ev.key);
+        console.log("path -> ", path);
 
-    var elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-    sessionStorage.setItem('elementPos', elementPos);
+        var elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
+        sessionStorage.setItem('elementPos', elementPos);
 
-    if (elementPos === 1) {
-        saveNodeOnDataBase(ev.key, sessionStorage.getItem('uuid'), elementPos, "input");
+        if (elementPos === 1) {
+            saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), elementPos, ev.type, ev.key);
+        }
+        else {
+            saveRelationshipOnDatabase(path, sessionStorage.getItem('uuid'), elementPos, ev.type, ev.key);
+        }
     }
-    else {
-        saveRelationshipOnDatabase(ev.key, sessionStorage.getItem('uuid'), elementPos, "input");
-    }
-    }
-});
 
-function saveNodeOnDataBase(value, session, elementPos, action) {
+}
+
+function saveNodeOnDataBase(path, session, elementPos, action, value = null) {
     xhr.open("POST", 'http://10.227.107.156:3000/node/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
-        value: value,
+        path: path,
         session: session,
         elementPos: elementPos,
         action: action,
+        value: value,
     }));
 }
 
-function saveRelationshipOnDatabase(value, session, elementPos, action) {
+function saveRelationshipOnDatabase(path, session, elementPos, action, value = null) {
     xhr.open("POST", 'http://10.227.107.156:3000/relationship/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
-        value: value,
+        path: path,
         session: session,
         elementPos: elementPos,
         action: action,
+        value: value,
     }));
 }
 
