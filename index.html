@@ -1,33 +1,118 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
+<head>
     <title>Path test</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="tracking.js"></script>
-  </head>
+    <style>
+        #div1 {
+            width: 350px;
+            height: 70px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+        }
 
-  <body>
-    <div class="thisIsADiv">
-      <h1 id="heading">Heading</h1>
-      <p>paragraph.</p>
-    </div>
-    <div class="thisIsADiv">
-      <a id="anchor" href="page2.html">link</a>
-      <div class="thisIsAnInsideDiv">
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="tracking.js"></script>
+    <script>
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
+    </script>
+</head>
+
+<body>
+<div class="thisIsADiv">
+    <h1 id="heading">Heading</h1>
+    <p>paragraph.</p>
+</div>
+<div class="thisIsADiv">
+    <a id="anchor" href="page2.html">link</a>
+    <div class="thisIsAnInsideDiv">
         <p id="paragraph">some text here</p>
         <p>paragraph.</p>
-      </div>
-        <form action="">
-            First name: <input type="text" name="fname"><br>
-            Last name: <input type="text" name="lname"><br>
-            Password: <input type="password" name="lname"><br>
-            <input type="submit" value="Submit">
-        </form>
-      <img src="Screenshot%202019-01-18%20at%2015.35.27.png"/>
     </div>
+    <form action="">
+        First name: <input type="text" name="fname"><br>
+        Last name: <input type="text" name="lname"><br>
+        Password: <input type="password" name="lname"><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <br>
+    <img id="drag1" src="Screenshot%202019-01-18%20at%2015.35.27.png" draggable="true" ondragstart="drag(event)"
+         width="336" height="69">
 
-  </body>
-  </body>
+    <div class="dropdown">
+        <button class="dropbtn">Dropdown</button>
+        <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+        </div>
+    </div>
+    <input type="checkbox" name="vehicle1" value="Bike"> Web analytics <br>
+
+</div>
+
+</body>
 
 </html>

@@ -38,11 +38,12 @@ app.get('/', function(req, res) {
 
 app.post('/node/add', function(req, res) {
     console.log(req.body);
-    session.run('CREATE(n:OBJECT {path:{pathParam}, session:{sessionParam}, elementPos:{elementPosParam}, action: {actionParam}, value:{valueParam}}) RETURN n', {
+    session.run('CREATE(n:OBJECT {path:{pathParam}, session:{sessionParam}, elementPos:{elementPosParam}, action: {actionParam}, url: {urlParam}, value:{valueParam}}) RETURN n', {
       pathParam: req.body.path,
       sessionParam: req.body.session,
       elementPosParam: parseInt(req.body.elementPos),
       actionParam: req.body.action,
+      urlParam: req.body.url,
       valueParam: req.body.value
   })
     .then(function(result) {
@@ -59,12 +60,13 @@ app.post('/node/add', function(req, res) {
 
 app.post('/relationship/add', function(req, res) {
     console.log(req.body);
-  session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {path: {pathParam}, session: {sessionParam}, elementPos: {elementPosBParam}, action: {actionParam},value: {valueParam}})-[:Follows]->(a) RETURN n', {
+  session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {path: {pathParam}, session: {sessionParam}, elementPos: {elementPosBParam}, action: {actionParam}, url: {urlParam}, value: {valueParam}})-[:Follows]->(a) RETURN n', {
       pathParam: req.body.path,
       sessionParam: req.body.session,
       elementPosAParam: parseInt(req.body.elementPos) - 1,
       elementPosBParam: parseInt(req.body.elementPos),
       actionParam: req.body.action,
+      urlParam: req.body.url,
       valueParam: req.body.value
   })
     .then(function(result) {
@@ -82,7 +84,7 @@ app.post('/relationship/add', function(req, res) {
 
 
 
-app.listen(3000, '10.227.107.156');
-console.log('Server Started on Port 3000');
+app.listen(8080, '10.227.107.156');
+console.log('Server Started on Port 8080');
 
 module.exports = app;
