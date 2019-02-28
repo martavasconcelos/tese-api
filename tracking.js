@@ -2,6 +2,7 @@ let xhr = new XMLHttpRequest();
 let uuid;
 let elementPos;
 let path;
+let id;
 const basePath = "http://web-analytics.fe.up.pt";
 let dragPath = null;
 
@@ -112,81 +113,112 @@ function getKeyType(key) {
 function getMouseElement(ev) {
 
     path = createXPathFromElement(ev.srcElement);
+    getPathId(path);
 
-    let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-    sessionStorage.setItem('elementPos', elementPos);
+    setTimeout(function () {
+        console.log("id timout: ", id);
+        let actionId = getActionId(ev.type);
 
-    if (elementPos === 1) {
-        saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type, window.location.href);
-    }
-    else {
-        saveRelationshipOnDatabase(path, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type, window.location.href);
-    }
+        let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
+        sessionStorage.setItem('elementPos', elementPos);
+
+        if (elementPos === 1) {
+            saveNodeOnDataBase(path, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type, actionId, window.location.href);
+        }
+        else {
+            saveRelationshipOnDatabase(path, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type, actionId, window.location.href);
+        }
+    }, 500);
 
 }
+
 
 function getDragElement(dragPath, ev) {
 
     let dropPath = createXPathFromElement(ev.srcElement);
-    let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-    sessionStorage.setItem('elementPos', elementPos);
-    if (elementPos === 1) {
-        saveNodeOnDataBase(dragPath, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), "dragAndDrop", window.location.href, dropPath);
-    }
-    else {
-        saveRelationshipOnDatabase(dragPath, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), "dragAndDrop", window.location.href, dropPath);
-    }
+    getPathId(dragPath);
+    const action = "dragAndDrop";
+
+    setTimeout(function () {
+        let actionId = getActionId(action);
+        let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
+        sessionStorage.setItem('elementPos', elementPos);
+
+        if (elementPos === 1) {
+            saveNodeOnDataBase(dragPath, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
+        }
+        else {
+            saveRelationshipOnDatabase(dragPath, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
+        }
+    }, 500);
 
 }
 
 function getPasteElement(ev, pasteInput) {
     let keyType = getKeyType(pasteInput);
+    getPathId(path);
+
+    setTimeout(function () {
+
+    const action = "input";
+    let actionId = getActionId(action);
+
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
     sessionStorage.setItem('elementPos', elementPos);
 
     if (elementPos === 1) {
-        saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), elementPos, "input", window.location.href, keyType);
+        saveNodeOnDataBase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyType);
     }
     else {
-        saveRelationshipOnDatabase(path, sessionStorage.getItem('uuid'), elementPos, "input", window.location.href, keyType);
+        saveRelationshipOnDatabase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyType);
     }
-
-
+    }, 500);
 }
 
 function getKeyboardElement(keyArray) {
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
     sessionStorage.setItem('elementPos', elementPos);
+    getPathId(path);
+
+    setTimeout(function () {
+    const action = "input";
+    let actionId = getActionId(action);
 
     if (elementPos === 1) {
-        saveNodeOnDataBase(path, sessionStorage.getItem('uuid'), elementPos, "input", window.location.href, keyArray);
+        saveNodeOnDataBase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyArray);
     }
     else {
-        saveRelationshipOnDatabase(path, sessionStorage.getItem('uuid'), elementPos, "input", window.location.href, keyArray);
+        saveRelationshipOnDatabase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyArray);
     }
+    }, 500);
+
 }
 
-function saveNodeOnDataBase(path, session, elementPos, action, url, value = null) {
+function saveNodeOnDataBase(path, pathId, session, elementPos, action, actionId, url, value = null) {
     xhr.open("POST", basePath + '/node/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
         path: path,
+        pathId: pathId,
         session: session,
         elementPos: elementPos,
         action: action,
+        actionId: actionId,
         url: url,
         value: value
     }));
 }
 
-function saveRelationshipOnDatabase(path, session, elementPos, action, url, value = null) {
+function saveRelationshipOnDatabase(path, pathId, session, elementPos, action, actionId, url, value = null) {
     xhr.open("POST", basePath + '/relationship/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
         path: path,
+        pathId: pathId,
         session: session,
         elementPos: elementPos,
         action: action,
+        actionId: actionId,
         url: url,
         value: value
     }));
@@ -232,5 +264,7 @@ function createXPathFromElement(elm) {
         ;
     }
     ;
+    console.log("path: ", '/' + segs.join('/'));
     return segs.length ? '/' + segs.join('/') : null;
+
 }
