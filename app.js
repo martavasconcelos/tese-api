@@ -48,10 +48,13 @@ app.get('/lastId', function (req, res) {
         })
 });
 
+//todo acrescentar actionType
 app.post('/pathId', function (req, res) {
     session
-        .run('Match (n:OBJECT {path:{pathParam}}) RETURN n.pathId', {
-            pathParam: req.body.path
+        .run('Match (n:OBJECT {path:{pathParam}, action:{actionParam}, url:{urlParam}}) RETURN n.pathId', {
+            pathParam: req.body.path,
+            actionParam: req.body.action,
+            urlParam: req.body.url,
         })
         .then(function(result) {
             console.log(result);

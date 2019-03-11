@@ -113,7 +113,7 @@ function getKeyType(key) {
 function getMouseElement(ev) {
 
     path = createXPathFromElement(ev.srcElement);
-    getPathId(path);
+    getPathId(path, ev.type);
 
     setTimeout(function () {
         console.log("id timout: ", id);
@@ -136,8 +136,8 @@ function getMouseElement(ev) {
 function getDragElement(dragPath, ev) {
 
     let dropPath = createXPathFromElement(ev.srcElement);
-    getPathId(dragPath);
     const action = "dragAndDrop";
+    getPathId(dragPath, action);
 
     setTimeout(function () {
         let actionId = getActionId(action);
@@ -156,11 +156,11 @@ function getDragElement(dragPath, ev) {
 
 function getPasteElement(ev, pasteInput) {
     let keyType = getKeyType(pasteInput);
-    getPathId(path);
+    const action = "input";
+
+    getPathId(path, action);
 
     setTimeout(function () {
-
-        const action = "input";
         let actionId = getActionId(action);
 
         let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
@@ -173,16 +173,19 @@ function getPasteElement(ev, pasteInput) {
             saveRelationshipOnDatabase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyType);
         }
     }, 500);
+
 }
 
 function getKeyboardElement(keyArray) {
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
     sessionStorage.setItem('elementPos', elementPos);
-    getPathId(path);
+    const action = "input";
+    console.log("getPAth id: ", action);
+    getPathId(path, action);
 
     setTimeout(function () {
-        const action = "input";
         let actionId = getActionId(action);
+        console.log("genn.----------tPAth id: ", id);
 
         if (elementPos === 1) {
             saveNodeOnDataBase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyArray);
@@ -267,16 +270,20 @@ function createXPathFromElement(elm) {
     return segs.length ? '/' + segs.join('/') : null;
 }
 
-function getPathId(path) {
+function getPathId(path, action) {
+    console.log("getPathId", path, action, window.location.href);
     let id = null;
     xhr.open("POST", basePath + '/pathId', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
-        path: path
+        path: path,
+        action: action,
+        url: window.location.href
     }));
     xhr.onload = function () {
+        console.log("inside");
         let responseJson = JSON.parse(xhr.response);
-        console.log("response: ", responseJson);
+        console.log("response id: ", responseJson);
         if (responseJson.records.length > 0) {
             id = responseJson.records[0]._fields[0];
             setId(id);
@@ -287,6 +294,7 @@ function getPathId(path) {
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onload = function () {
                 let responseJson = JSON.parse(xhr.response);
+                console.log("response id: ", responseJson);
                 if (responseJson.records.length > 0) {
                     id = responseJson.records[0]._fields[0];
                     setId(id + 1);
