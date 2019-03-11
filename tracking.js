@@ -2,12 +2,11 @@ let xhr = new XMLHttpRequest();
 let uuid;
 let elementPos;
 let path;
-let id;
 const basePath = "http://web-analytics.fe.up.pt";
 let dragPath = null;
 
 let timer = 0;
-let delay = 200;
+let delay = 2000;
 let prevent = false;
 
 let keyPressMode = false;
@@ -44,7 +43,6 @@ document.addEventListener("click", function (ev) {
         }
         prevent = false;
     }, delay);
-
 });
 
 document.addEventListener("dragstart", function (ev) {
@@ -76,7 +74,6 @@ document.addEventListener("paste", function (ev) {
 
 function checkKeyPressMode() {
     if (keyPressMode) {
-        console.log("saved!");
         getKeyboardElement(keyArray);
         keyArray = [];
         keyPressMode = false;
@@ -111,90 +108,68 @@ function getKeyType(key) {
 }
 
 function getMouseElement(ev) {
-
     path = createXPathFromElement(ev.srcElement);
     getPathId(path, ev.type);
-
-    setTimeout(function () {
-        console.log("id timout: ", id);
-        let actionId = getActionId(ev.type);
-
-        let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-        sessionStorage.setItem('elementPos', elementPos);
-
-        if (elementPos === 1) {
-            saveNodeOnDataBase(path, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type, actionId, window.location.href);
-        }
-        else {
-            saveRelationshipOnDatabase(path, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), ev.type, actionId, window.location.href);
-        }
-    }, 500);
-
 }
 
+function callbackFromGetPathIdMouseEvent(idFromCallback, action){
+    console.log("pathId: ", idFromCallback);
+    let actionId = getActionId(action);
+
+    let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
+    sessionStorage.setItem('elementPos', elementPos);
+
+    if (elementPos === 1) {
+        saveNodeOnDataBase(path, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href);
+    }
+    else {
+        saveRelationshipOnDatabase(path, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href);
+    }
+}
 
 function getDragElement(dragPath, ev) {
 
     let dropPath = createXPathFromElement(ev.srcElement);
     const action = "dragAndDrop";
-    getPathId(dragPath, action);
+    getPathId(dragPath, action, dropPath);
 
-    setTimeout(function () {
-        let actionId = getActionId(action);
-        let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-        sessionStorage.setItem('elementPos', elementPos);
+}
 
-        if (elementPos === 1) {
-            saveNodeOnDataBase(dragPath, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
-        }
-        else {
-            saveRelationshipOnDatabase(dragPath, id, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
-        }
-    }, 500);
+function callbackFromGetPathIdDragEvent(idFromCallback, action, dropPath) {
+    let actionId = getActionId(action);
+    let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
+    sessionStorage.setItem('elementPos', elementPos);
 
+    if (elementPos === 1) {
+        saveNodeOnDataBase(dragPath, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
+    }
+    else {
+        saveRelationshipOnDatabase(dragPath, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
+    }
 }
 
 function getPasteElement(ev, pasteInput) {
     let keyType = getKeyType(pasteInput);
     const action = "input";
-
-    getPathId(path, action);
-
-    setTimeout(function () {
-        let actionId = getActionId(action);
-
-        let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
-        sessionStorage.setItem('elementPos', elementPos);
-
-        if (elementPos === 1) {
-            saveNodeOnDataBase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyType);
-        }
-        else {
-            saveRelationshipOnDatabase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyType);
-        }
-    }, 500);
-
+    getPathId(path, action, keyType);
 }
 
 function getKeyboardElement(keyArray) {
+    const action = "input";
+    getPathId(path, action, keyArray);
+}
+
+function callbackFromGetPathIdInputEvent(idFromCallback, action, inputValue) {
+    let actionId = getActionId(action);
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
     sessionStorage.setItem('elementPos', elementPos);
-    const action = "input";
-    console.log("getPAth id: ", action);
-    getPathId(path, action);
 
-    setTimeout(function () {
-        let actionId = getActionId(action);
-        console.log("genn.----------tPAth id: ", id);
-
-        if (elementPos === 1) {
-            saveNodeOnDataBase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyArray);
-        }
-        else {
-            saveRelationshipOnDatabase(path, id, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, keyArray);
-        }
-    }, 500);
-
+    if (elementPos === 1) {
+        saveNodeOnDataBase(path, idFromCallback, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, inputValue);
+    }
+    else {
+        saveRelationshipOnDatabase(path, idFromCallback, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, inputValue);
+    }
 }
 
 function saveNodeOnDataBase(path, pathId, session, elementPos, action, actionId, url, value = null) {
@@ -270,8 +245,7 @@ function createXPathFromElement(elm) {
     return segs.length ? '/' + segs.join('/') : null;
 }
 
-function getPathId(path, action) {
-    console.log("getPathId", path, action, window.location.href);
+function getPathId(path, action, optionalValue) {
     let id = null;
     xhr.open("POST", basePath + '/pathId', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -281,12 +255,10 @@ function getPathId(path, action) {
         url: window.location.href
     }));
     xhr.onload = function () {
-        console.log("inside");
         let responseJson = JSON.parse(xhr.response);
-        console.log("response id: ", responseJson);
         if (responseJson.records.length > 0) {
             id = responseJson.records[0]._fields[0];
-            setId(id);
+            setId(id, action, optionalValue);
         }
         else {
             let lastId = null;
@@ -294,13 +266,12 @@ function getPathId(path, action) {
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onload = function () {
                 let responseJson = JSON.parse(xhr.response);
-                console.log("response id: ", responseJson);
                 if (responseJson.records.length > 0) {
                     id = responseJson.records[0]._fields[0];
-                    setId(id + 1);
+                    setId(id + 1, action, optionalValue);
                 }
                 else {
-                    setId(1);
+                    setId(1, action, optionalValue);
                 }
             };
             xhr.send('');
@@ -308,9 +279,20 @@ function getPathId(path, action) {
     };
 }
 
-function setId(idValue) {
-    console.log("idValue", idValue);
-    id = idValue;
+function setId(idValue, action, optionalValue) {
+    switch (action) {
+        case "click":
+            callbackFromGetPathIdMouseEvent(idValue, action);
+            break;
+        case "dragAndDrop":
+            callbackFromGetPathIdDragEvent(idValue, action, optionalValue);
+            break;
+        case "input":
+            callbackFromGetPathIdInputEvent(idValue, action, optionalValue);
+            break;
+        default:
+            break;
+    }
 }
 
 function getActionId(actionType) {
