@@ -1,12 +1,11 @@
 let xhr = new XMLHttpRequest();
 let uuid;
-let elementPos;
 let path;
 const basePath = "http://web-analytics.fe.up.pt";
 let dragPath = null;
 
 let timer = 0;
-let delay = 2000;
+let delay = 200;
 let prevent = false;
 
 let keyPressMode = false;
@@ -15,9 +14,9 @@ let keyArray = [];
 
 document.addEventListener("DOMContentLoaded", function () {
     var data = sessionStorage.getItem('uuid');
+    // generate unique identifier if there is no uuid stored
     if (data === null) {
         uuid = generateUuid();
-        elementPos = -1;
         sessionStorage.setItem('uuid', uuid);
         sessionStorage.setItem('elementPos', 0);
         data = sessionStorage.getItem('uuid');
@@ -26,17 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-
-document.addEventListener("dblclick", function (ev) {
-    if (checkKeyPressMode()) {
-        clearTimeout(timer);
-        prevent = true;
-        getMouseElement(ev);
-    }
-});
-
 document.addEventListener("click", function (ev) {
-    checkKeyPressMode();
+    checkInputToSave();
+    // the delay allows to detect a double click before
+    // saving the first click as a simple click
     timer = setTimeout(function () {
         if (!prevent) {
             getMouseElement(ev);
@@ -45,22 +37,31 @@ document.addEventListener("click", function (ev) {
     }, delay);
 });
 
+document.addEventListener("dblclick", function (ev) {
+        checkInputToSave();
+        clearTimeout(timer);
+        getMouseElement(ev);
+        prevent = true;
+});
+
 document.addEventListener("dragstart", function (ev) {
-    checkKeyPressMode();
+    checkInputToSave();
     dragPath = createXPathFromElement(ev.srcElement);
 });
 
 document.addEventListener("drop", function (ev) {
     if (dragPath !== null) {
-        getDragElement(dragPath, ev);
+        getDragAndDropElement(dragPath, ev);
     }
 });
 
+// the key's value is saved in a key array to be saved in the DB when the input is deselected
 document.addEventListener("keypress", function (ev) {
     keyPressMode = true;
     buildKeyArray(ev.key);
 });
 
+// detect backspace, delete, tab and enter
 document.addEventListener("keyup", function (ev) {
     if (ev.which === 8 || ev.which === 46 || ev.which === 9 || ev.which === 13) {
         buildKeyArray(ev.key);
@@ -69,10 +70,11 @@ document.addEventListener("keyup", function (ev) {
 
 document.addEventListener("paste", function (ev) {
     getPasteElement(ev, ev.clipboardData.getData('Text'));
-
 });
 
-function checkKeyPressMode() {
+// check if there is any input data to save - when an input
+// is deselected by a click in other place, its data should be saved
+function checkInputToSave() {
     if (keyPressMode) {
         getKeyboardElement(keyArray);
         keyArray = [];
@@ -80,18 +82,22 @@ function checkKeyPressMode() {
     }
 }
 
+// join the input values in an array
 function buildKeyArray(key) {
     let keyType = getKeyType(key);
     keyArray.push(keyType);
 }
 
+// to avoid retrieve sensitive data,
+// input values are converted in char or string according to its length
+// "special" keys are also saved (backspace, tab, enter, delete);
 function getKeyType(key) {
     let keyType;
     if (/^[a-zA-Z]+$/.test(key)) {
         if (key.length === 1) {
             keyType = 'char';
         }
-        else if (key === "Backspace" || key === "Tab" || key === "Enter") {
+        else if (key === "Backspace" || key === "Tab" || key === "Enter" || key === "Delete") {
             keyType = key;
         }
         else if (key.length > 1) {
@@ -112,8 +118,8 @@ function getMouseElement(ev) {
     getPathId(path, ev.type);
 }
 
+// function called after the getPathId, to save the mouse interaction in the DB
 function callbackFromGetPathIdMouseEvent(idFromCallback, action){
-    console.log("pathId: ", idFromCallback);
     let actionId = getActionId(action);
 
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
@@ -127,14 +133,14 @@ function callbackFromGetPathIdMouseEvent(idFromCallback, action){
     }
 }
 
-function getDragElement(dragPath, ev) {
-
+function getDragAndDropElement(dragPath, ev) {
     let dropPath = createXPathFromElement(ev.srcElement);
     const action = "dragAndDrop";
     getPathId(dragPath, action, dropPath);
 
 }
 
+// function called after the getPathId, to save the drag and drop interaction in the DB
 function callbackFromGetPathIdDragEvent(idFromCallback, action, dropPath) {
     let actionId = getActionId(action);
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
@@ -159,6 +165,7 @@ function getKeyboardElement(keyArray) {
     getPathId(path, action, keyArray);
 }
 
+// function called after the getPathId, to save the input interaction in the DB
 function callbackFromGetPathIdInputEvent(idFromCallback, action, inputValue) {
     let actionId = getActionId(action);
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
@@ -172,6 +179,7 @@ function callbackFromGetPathIdInputEvent(idFromCallback, action, inputValue) {
     }
 }
 
+// save just one node in the DB
 function saveNodeOnDataBase(path, pathId, session, elementPos, action, actionId, url, value = null) {
     xhr.open("POST", basePath + '/node/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -187,6 +195,7 @@ function saveNodeOnDataBase(path, pathId, session, elementPos, action, actionId,
     }));
 }
 
+// save one node and its relationship with the previous one
 function saveRelationshipOnDatabase(path, pathId, session, elementPos, action, actionId, url, value = null) {
     xhr.open("POST", basePath + '/relationship/add', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -202,6 +211,7 @@ function saveRelationshipOnDatabase(path, pathId, session, elementPos, action, a
     }));
 }
 
+// function to generate a unique id to represent the session
 function generateUuid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -244,7 +254,10 @@ function createXPathFromElement(elm) {
     ;
     return segs.length ? '/' + segs.join('/') : null;
 }
-
+// two requests are made in this function:
+// the first one aims to check if there is already a path id to the interaction: (path, action, url)
+// if the interaction has not an id yet, a second request is made to get the last id set,
+// increasing one to the highest value already defined.
 function getPathId(path, action, optionalValue) {
     let id = null;
     xhr.open("POST", basePath + '/pathId', true);
@@ -279,9 +292,14 @@ function getPathId(path, action, optionalValue) {
     };
 }
 
+// after getting the id, it's called the function responsible to save the interaction
+// according to the type of action performed
 function setId(idValue, action, optionalValue) {
     switch (action) {
         case "click":
+            callbackFromGetPathIdMouseEvent(idValue, action);
+            break;
+        case "dblclick":
             callbackFromGetPathIdMouseEvent(idValue, action);
             break;
         case "dragAndDrop":
@@ -295,6 +313,7 @@ function setId(idValue, action, optionalValue) {
     }
 }
 
+// get a representative id of the action performed
 function getActionId(actionType) {
     let actionId;
     switch (actionType) {
@@ -306,6 +325,9 @@ function getActionId(actionType) {
             break;
         case "input":
             actionId = 3;
+            break;
+        case "dblclick":
+            actionId = 4;
             break;
         default:
             break;
