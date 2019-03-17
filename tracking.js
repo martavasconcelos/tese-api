@@ -1,6 +1,7 @@
 let xhr = new XMLHttpRequest();
 let uuid;
 let path;
+let block;
 const basePath = "http://web-analytics.fe.up.pt";
 let dragPath = null;
 
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("click", function (ev) {
+    checkPasswordInput(ev);
     checkInputToSave();
     // the delay allows to detect a double click before
     // saving the first click as a simple click
@@ -38,10 +40,10 @@ document.addEventListener("click", function (ev) {
 });
 
 document.addEventListener("dblclick", function (ev) {
-        checkInputToSave();
-        clearTimeout(timer);
-        getMouseElement(ev);
-        prevent = true;
+    checkInputToSave();
+    clearTimeout(timer);
+    getMouseElement(ev);
+    prevent = true;
 });
 
 document.addEventListener("dragstart", function (ev) {
@@ -76,16 +78,30 @@ document.addEventListener("paste", function (ev) {
 // is deselected by a click in other place, its data should be saved
 function checkInputToSave() {
     if (keyPressMode) {
-        getKeyboardElement(keyArray);
+        if (keyArray.length > 0) {
+            getKeyboardElement(keyArray);
+        }
         keyArray = [];
         keyPressMode = false;
     }
 }
 
+// avoid to save password field
+function checkPasswordInput(ev) {
+    if (ev.srcElement.type === "password") {
+        block = true;
+    }
+    else {
+        block = false;
+    }
+}
+
 // join the input values in an array
 function buildKeyArray(key) {
-    let keyType = getKeyType(key);
-    keyArray.push(keyType);
+    if (!block) {
+        let keyType = getKeyType(key);
+        keyArray.push(keyType);
+    }
 }
 
 // to avoid retrieve sensitive data,
@@ -119,7 +135,7 @@ function getMouseElement(ev) {
 }
 
 // function called after the getPathId, to save the mouse interaction in the DB
-function callbackFromGetPathIdMouseEvent(idFromCallback, action){
+function callbackFromGetPathIdMouseEvent(idFromCallback, action) {
     let actionId = getActionId(action);
 
     let elementPos = parseInt(sessionStorage.getItem('elementPos')) + 1;
@@ -163,6 +179,7 @@ function getPasteElement(ev, pasteInput) {
 function getKeyboardElement(keyArray) {
     const action = "input";
     getPathId(path, action, keyArray);
+
 }
 
 // function called after the getPathId, to save the input interaction in the DB
@@ -254,6 +271,7 @@ function createXPathFromElement(elm) {
     ;
     return segs.length ? '/' + segs.join('/') : null;
 }
+
 // two requests are made in this function:
 // the first one aims to check if there is already a path id to the interaction: (path, action, url)
 // if the interaction has not an id yet, a second request is made to get the last id set,
