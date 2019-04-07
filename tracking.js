@@ -2,7 +2,7 @@ let xhr = new XMLHttpRequest();
 let uuid;
 let path;
 let block;
-const basePath = "http://web-analytics.fe.up.pt";
+const basePath = "http://10.227.107.156:8080";
 let dragPath = null;
 
 let timer = 0;
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.setItem('elementPos', 0);
         data = sessionStorage.getItem('uuid');
     }
-    console.log("ready!", data);
+  //  console.log("ready!", data);
 
 });
 
@@ -150,9 +150,12 @@ function callbackFromGetPathIdMouseEvent(idFromCallback, action) {
 }
 
 function getDragAndDropElement(dragPath, ev) {
+    let dropArray = [];
     let dropPath = createXPathFromElement(ev.srcElement);
+    dropArray.push(dropPath);
     const action = "dragAndDrop";
-    getPathId(dragPath, action, dropPath);
+
+    getPathId(dragPath, action, dropArray);
 
 }
 
