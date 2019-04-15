@@ -4,7 +4,7 @@
     <list default="true" id="12cb9c7d-6f57-4807-9ff9-13003078f849" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tracking.js" beforeDir="false" afterPath="$PROJECT_DIR$/tracking.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -24,42 +24,43 @@
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.11" value="2" />
           <entry key="project.open.time.12" value="1" />
+          <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.5" value="2" />
           <entry key="project.open.time.9" value="2" />
-          <entry key="project.opened" value="10" />
+          <entry key="project.opened" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="html" value="4" />
+          <entry key="html" value="5" />
           <entry key="js" value="8" />
           <entry key="json" value="1" />
-          <entry key="ts" value="4" />
+          <entry key="ts" value="5" />
           <entry key="txt" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="4" />
+          <entry key="HTML" value="5" />
           <entry key="JSON" value="1" />
           <entry key="JavaScript" value="8" />
           <entry key="PLAIN_TEXT" value="3" />
-          <entry key="TypeScript" value="4" />
+          <entry key="TypeScript" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="101" />
-          <entry key="js" value="8933" />
-          <entry key="txt" value="599" />
+          <entry key="js" value="9037" />
+          <entry key="txt" value="641" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="101" />
-          <entry key="JavaScript" value="8933" />
-          <entry key="PLAIN_TEXT" value="599" />
+          <entry key="JavaScript" value="9037" />
+          <entry key="PLAIN_TEXT" value="641" />
         </counts>
       </usages-collector>
     </session>
@@ -69,8 +70,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="488">
-              <caret line="112" selection-start-line="112" selection-end-line="112" />
+            <state relative-caret-position="213">
+              <caret line="84" column="24" lean-forward="true" selection-start-line="84" selection-start-column="24" selection-end-line="84" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -78,8 +79,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1009">
-              <caret line="90" column="154" selection-start-line="90" selection-start-column="154" selection-end-line="90" selection-end-column="154" />
+            <state relative-caret-position="283">
+              <caret line="85" column="31" selection-start-line="85" selection-start-column="31" selection-end-line="85" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -87,8 +88,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tracking.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+            <state relative-caret-position="-3597">
+              <caret line="72" column="31" selection-start-line="72" selection-start-column="27" selection-end-line="72" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="598">
+              <caret line="8749" column="4" selection-start-line="8749" selection-start-column="4" selection-end-line="8749" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -104,8 +114,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>callbackFromGetPathIdMouseEvent</find>
-      <find>getPathId</find>
       <find>callbackFromGetPathIdDragEvent</find>
       <find>getDragElement</find>
       <find>id</find>
@@ -134,6 +142,8 @@
       <find>prath</find>
       <find>pathId</find>
       <find>console.</find>
+      <find>query</find>
+      <find>past</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -143,9 +153,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/page2.html" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/../tese_api/app.js" />
         <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/tracking.js" />
       </list>
     </option>
@@ -167,9 +177,10 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1680" />
-    <option name="height" value="942" />
+    <option name="x" value="-1920" />
+    <option name="y" value="-96" />
+    <option name="width" value="1920" />
+    <option name="height" value="1007" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -240,7 +251,8 @@
       <workItem from="1548789915841" duration="82553000" />
       <workItem from="1552853963582" duration="99000" />
       <workItem from="1553031456834" duration="3138000" />
-      <workItem from="1554240451121" duration="14815000" />
+      <workItem from="1554240451121" duration="16708000" />
+      <workItem from="1554847120594" duration="6961000" />
     </task>
     <task id="LOCAL-00001" summary="relationship endpoint added.">
       <created>1546791537411</created>
@@ -340,17 +352,24 @@
       <option name="project" value="LOCAL" />
       <updated>1552830573951</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Try to block duplicated nodes.">
+      <created>1554675166389</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1554675166389</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="121048000" />
+    <option name="totallyTimeSpent" value="129902000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1680" height="942" extended-state="0" />
+    <frame x="-1920" y="-96" width="1486" height="1007" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13682942" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1549488" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -362,7 +381,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.1764706" />
+      <window_info anchor="bottom" id="Version Control" order="8" visible="true" weight="0.16393442" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32941177" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -391,7 +410,8 @@
     <MESSAGE value="refactoring (timeouts removed)" />
     <MESSAGE value="Double click fixed. Comments added." />
     <MESSAGE value="Block when a password is detected." />
-    <option name="LAST_COMMIT_MESSAGE" value="Block when a password is detected." />
+    <MESSAGE value="Try to block duplicated nodes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Try to block duplicated nodes." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/tracking.min.js">
@@ -412,13 +432,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-56">
           <caret line="3" column="11" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="16925" column="12" selection-start-line="16925" selection-start-column="12" selection-end-line="16925" selection-end-column="12" />
         </state>
       </provider>
     </entry>
@@ -443,27 +456,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="488">
-          <caret line="112" selection-start-line="112" selection-end-line="112" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../app.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1009">
-          <caret line="90" column="154" selection-start-line="90" selection-start-column="154" selection-end-line="90" selection-end-column="154" />
+        <state relative-caret-position="283">
+          <caret line="85" column="31" selection-start-line="85" selection-start-column="31" selection-end-line="85" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="598">
+          <caret line="8749" column="4" selection-start-line="8749" selection-start-column="4" selection-end-line="8749" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/MAMP/htdocs/leirasdoseixo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="38" column="11" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="84" column="24" lean-forward="true" selection-start-line="84" selection-start-column="24" selection-end-line="84" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tracking.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        <state relative-caret-position="-3597">
+          <caret line="72" column="31" selection-start-line="72" selection-start-column="27" selection-end-line="72" selection-end-column="31" />
         </state>
       </provider>
     </entry>

@@ -38,7 +38,7 @@ app.get('/', function (req, res) {
 app.get('/lastId', function (req, res) {
     session
         .run('MATCH (n:OBJECT) RETURN n.pathId AS count ORDER BY count desc')
-        .then(function(result) {
+        .then(function (result) {
             res.json(result);
         })
         .catch(function (err) {
@@ -53,7 +53,7 @@ app.post('/pathId', function (req, res) {
             actionParam: req.body.action,
             urlParam: req.body.url,
         })
-        .then(function(result) {
+        .then(function (result) {
             res.json(result);
         })
         .catch(function (err) {
@@ -62,23 +62,30 @@ app.post('/pathId', function (req, res) {
 });
 
 app.post('/node/add', function (req, res) {
-    session.run('CREATE(n:OBJECT {path:{pathParam}, pathId:{pathParamId}, session:{sessionParam}, elementPos:{elementPosParam}, action: {actionParam}, actionId: {actionParamId}, url: {urlParam}, value:{valueParam}}) RETURN n', {
-        pathParam: req.body.path,
-        pathParamId: req.body.pathId,
+    session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosBParam} return a', {
         sessionParam: req.body.session,
-        elementPosParam: parseInt(req.body.elementPos),
-        actionParam: req.body.action,
-        actionParamId: req.body.actionId,
-        urlParam: req.body.url,
-        valueParam: req.body.value
+        elementPosBParam: parseInt(req.body.elementPos),
     })
         .then(function (result) {
-            session.close();
+            if (result.records.length === 0) {
+                session.run('CREATE(n:OBJECT {path:{pathParam}, pathId:{pathParamId}, session:{sessionParam}, elementPos:{elementPosParam}, action: {actionParam}, actionId: {actionParamId}, url: {urlParam}, value:{valueParam}}) RETURN n', {
+                    pathParam: req.body.path,
+                    pathParamId: req.body.pathId,
+                    sessionParam: req.body.session,
+                    elementPosParam: parseInt(req.body.elementPos),
+                    actionParam: req.body.action,
+                    actionParamId: req.body.actionId,
+                    urlParam: req.body.url,
+                    valueParam: req.body.value
+                })
+                    .then(function (result) {
+                        session.close();
+                    })
+            }
         })
         .catch(function (err) {
             console.log("error!", err)
         })
-
 });
 
 app.post('/relationship/add', function (req, res) {
@@ -87,7 +94,7 @@ app.post('/relationship/add', function (req, res) {
         elementPosBParam: parseInt(req.body.elementPos),
     })
         .then(function (result) {
-            if(result.records.length === 0) {
+            if (result.records.length === 0) {
                 session.run('MATCH (a:OBJECT) WHERE a.session = {sessionParam} AND a.elementPos = {elementPosAParam} CREATE(n:OBJECT {path: {pathParam}, pathId: {pathParamId}, session: {sessionParam}, elementPos: {elementPosBParam}, action: {actionParam}, actionId: {actionParamId}, url: {urlParam}, value: {valueParam}})-[:Follows]->(a) RETURN n', {
                     pathParam: req.body.path,
                     pathParamId: req.body.pathId,
@@ -111,9 +118,7 @@ app.post('/relationship/add', function (req, res) {
 });
 
 
-
-
-app.listen(8080, '10.227.107.156');
+app.listen(80, '10.227.107.156');
 console.log('Server Started on Port 8080');
 
 module.exports = app;
