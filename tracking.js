@@ -142,10 +142,10 @@ function callbackFromGetPathIdMouseEvent(idFromCallback, action) {
     sessionStorage.setItem('elementPos', elementPos);
 
     if (elementPos === 1) {
-        saveNodeOnDataBase(path, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href);
+        saveNodeOnDataBase(path, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, getFormattedUrl(window.location.href));
     }
     else {
-        saveRelationshipOnDatabase(path, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href);
+        saveRelationshipOnDatabase(path, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, getFormattedUrl(window.location.href));
     }
 }
 
@@ -166,10 +166,10 @@ function callbackFromGetPathIdDragEvent(idFromCallback, action, dropPath) {
     sessionStorage.setItem('elementPos', elementPos);
 
     if (elementPos === 1) {
-        saveNodeOnDataBase(dragPath, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
+        saveNodeOnDataBase(dragPath, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, getFormattedUrl(window.location.href), dropPath);
     }
     else {
-        saveRelationshipOnDatabase(dragPath, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, window.location.href, dropPath);
+        saveRelationshipOnDatabase(dragPath, idFromCallback, sessionStorage.getItem('uuid'), sessionStorage.getItem('elementPos'), action, actionId, getFormattedUrl(window.location.href), dropPath);
     }
 }
 
@@ -192,10 +192,10 @@ function callbackFromGetPathIdInputEvent(idFromCallback, action, inputValue) {
     sessionStorage.setItem('elementPos', elementPos);
 
     if (elementPos === 1) {
-        saveNodeOnDataBase(path, idFromCallback, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, inputValue);
+        saveNodeOnDataBase(path, idFromCallback, sessionStorage.getItem('uuid'), elementPos, action, actionId, getFormattedUrl(window.location.href), inputValue);
     }
     else {
-        saveRelationshipOnDatabase(path, idFromCallback, sessionStorage.getItem('uuid'), elementPos, action, actionId, window.location.href, inputValue);
+        saveRelationshipOnDatabase(path, idFromCallback, sessionStorage.getItem('uuid'), elementPos, action, actionId, getFormattedUrl(window.location.href), inputValue);
     }
 }
 
@@ -280,13 +280,14 @@ function createXPathFromElement(elm) {
 // if the interaction has not an id yet, a second request is made to get the last id set,
 // increasing one to the highest value already defined.
 function getPathId(path, action, optionalValue) {
+    let formattedUrl = getFormattedUrl(window.location.href);
     let id = null;
     xhr.open("POST", basePath + '/pathId', true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({
         path: path,
         action: action,
-        url: window.location.href
+        url: formattedUrl
     }));
     xhr.onload = function () {
         let responseJson = JSON.parse(xhr.response);
@@ -313,6 +314,10 @@ function getPathId(path, action, optionalValue) {
     };
 }
 
+function getFormattedUrl(url){
+    return url.split('?',1);
+
+}
 // after getting the id, it's called the function responsible to save the interaction
 // according to the type of action performed
 function setId(idValue, action, optionalValue) {
