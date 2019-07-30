@@ -21,8 +21,8 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
-var driver = neo4j.driver('bolt://10.227.107.156', neo4j.auth.basic('neo4j', 'tese2018'));
+//change credentials and ip
+var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'tese2018'));
 var session = driver.session();
 
 app.get('/', function (req, res) {
@@ -118,7 +118,7 @@ app.post('/relationship/add', function (req, res) {
 });
 
 
-app.listen(80, '10.227.107.156');
+app.listen(8080);
 console.log('Server Started on Port 8080');
 
 module.exports = app;
